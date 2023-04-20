@@ -38,9 +38,9 @@ app.get('/talker/:id', async (req, res) => {
 
 //  3. Crie o endpoint POST /login
 app.post('/login', async (req, res) => {
-  const { body } = req.body;
+  const { email, password } = req.body;
   const login = ['email', 'password'];
-  const loginValidation = login.every((field) => field in body);
+  const loginValidation = login.every((field) => field in req.body);
   const token = tokenGenerator();
 
   if (loginValidation) {
