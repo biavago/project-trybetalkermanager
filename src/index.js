@@ -1,4 +1,5 @@
 const express = require('express');
+const tokenGenerator = require('./tokenGenerator');
 const { readTalkers } = require('./readTalkerFile');
 
 const app = express();
@@ -33,4 +34,17 @@ app.get('/talker/:id', async (req, res) => {
     res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
   return res.status(200).json(talker);
+});
+
+//  3. Crie o endpoint POST /login
+app.post('/login', async (req, res) => {
+  const { body } = req.body;
+  const login = ['email', 'password'];
+  const loginValidation = login.every((field) => field in body);
+  const token = tokenGenerator();
+
+  if (loginValidation) {
+    return res.status(200).json({ token });
+  }
+  return res.status(400).json({ message: 'E-mail ou Senha inválidos!' });
 });
