@@ -1,4 +1,5 @@
 const express = require('express');
+const { readTalkers } = require('./readTalkerFile');
 
 const app = express();
 app.use(express.json());
@@ -13,4 +14,13 @@ app.get('/', (_request, response) => {
 
 app.listen(PORT, () => {
   console.log('Online');
+});
+
+//  1. Crie o endpoint GET /talker
+app.get('/talker', async (req, res) => {
+  const talkers = await readTalkers();
+  if (!talkers) {
+    return res.status(200).json([]);
+  }
+  return res.status(200).json(talkers);
 });
