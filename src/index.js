@@ -1,6 +1,8 @@
 const express = require('express');
 const tokenGenerator = require('./tokenGenerator');
 const { readTalkers } = require('./readTalkerFile');
+const { validateEmail } = require('./middlewares/validateEmail');
+const { validatePassword } = require('./middlewares/validatePassword');
 
 const app = express();
 app.use(express.json());
@@ -37,7 +39,8 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 //  3. Crie o endpoint POST /login
-app.post('/login', async (req, res) => {
+//  4. Adicione as validações para o endpoint /login
+app.post('/login', validateEmail, validatePassword, async (req, res) => {
   const login = ['email', 'password'];
   const loginValidation = login.every((field) => field in req.body);
   const token = tokenGenerator();
@@ -45,5 +48,5 @@ app.post('/login', async (req, res) => {
   if (loginValidation) {
     return res.status(200).json({ token });
   }
-  return res.status(400).json({ message: 'E-mail ou Senha inválidos!' });
+  return res.status(400).json({ message: 'É necessário preencher todos os campos!' });
 });
