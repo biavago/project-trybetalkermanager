@@ -77,3 +77,26 @@ app.post('/talker',
   await writeTalker(newTalkers);
   return res.status(201).json(newTalker);
 });
+
+
+//  6. Crie o endpoint PUT /talker/:id
+app.put('/talker/:id', 
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate, async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const talkers = await getTalkers();
+    const index = talkers.findIndex((element) => element.id === Number(id));
+    talkers[index] = { id: Number(id), name, age, talk };
+    const updatedTalker = JSON.stringify(talkers, null, 2);
+    await writeTalker(updatedTalker);
+
+    if (index === -1) {
+      return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    }
+    return res.status(200).json(talkers[index]);
+});
