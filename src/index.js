@@ -78,7 +78,6 @@ app.post('/talker',
   return res.status(201).json(newTalker);
 });
 
-
 //  6. Crie o endpoint PUT /talker/:id
 app.put('/talker/:id', 
   validateToken,
