@@ -33,6 +33,21 @@ app.get('/talker', async (req, res) => {
   return res.status(200).json(talkers);
 });
 
+//  8. Crie o endpoint GET /talker/search e o parâmetro de consulta q=searchTerm
+app.get('/talker/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await getTalkers();
+
+  if (!q) {
+    return res.status(200).json(talkers);
+  }
+  const filteredTalkers = talkers.filter((talker) => talker.name.includes(q));
+  if (filteredTalkers.length === 0) {
+    return res.status(200).json([]);
+  }
+  return res.status(200).json(filteredTalkers);
+});
+
 // 2. Crie o endpoint GET /talker/:id
 app.get('/talker/:id', async (req, res) => {
   const talkers = await readTalkers();
