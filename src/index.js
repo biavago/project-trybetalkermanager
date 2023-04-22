@@ -99,3 +99,14 @@ app.put('/talker/:id',
     }
     return res.status(200).json(talkers[index]);
 });
+
+//  7. Crie o endpoint DELETE /talker/:id
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const { authorization } = req.headers;
+  const talkers = await getTalkers();
+  const filteredTalkers = talkers.filter((talker) => talker.authorization !== authorization);
+  const updatedTalkers = filteredTalkers.map((talker) => ({ ...talkers, id: talker.id -1 }));
+  await writeTalker(JSON.stringify(updatedTalkers), 'utf-8');
+
+  return res.status(204).json();
+});
